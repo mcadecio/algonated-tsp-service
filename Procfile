@@ -1,1 +1,1 @@
-web: java -Dheroku.port=$PORT -jar target/algonated-tsp-service-1.0.jar
+web: java -Xmx512m -Dheroku.port=$PORT -Dcors.allowed.domain=$CORS_ALLOWED_DOMAIN -jar target/algonated-tsp-service-1.0.jar
