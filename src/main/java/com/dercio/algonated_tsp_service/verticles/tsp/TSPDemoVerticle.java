@@ -18,16 +18,15 @@ public class TSPDemoVerticle extends ConsumerVerticle {
     public void start(Promise<Void> startPromise) {
         var eventBus = vertx.eventBus();
         consumer = eventBus.consumer(getAddress());
-        consumer.handler(message -> eventBus.<Response>request(
-                VerticleAddresses.DEMO_RUNNER_CONSUMER.toString(),
-                message.body(),
-                reply -> {
-                    if (reply.succeeded()) {
-                        message.reply(reply.result().body());
-                    } else {
-                        message.fail(503, reply.cause().getMessage());
-                    }
-                }));
+        consumer.handler(message -> {
+            var demoRequest = eventBus.<Response>request(
+                    VerticleAddresses.DEMO_RUNNER_CONSUMER.toString(),
+                    message.body()
+            );
+
+            demoRequest.onSuccess(reply -> message.reply(reply.body()));
+            demoRequest.onFailure(error -> message.fail(503, error.getMessage()));
+        });
 
         consumer.completionHandler(result -> logRegistration(startPromise, result));
     }

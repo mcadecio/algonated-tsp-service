@@ -7,7 +7,7 @@ import lombok.*;
 @ToString
 @EqualsAndHashCode
 @NoArgsConstructor
-public class CodeRunnerSummary {
+public class AnalyticsSummary {
     private int iterations;
     private double timeRun;
     private double fitness;

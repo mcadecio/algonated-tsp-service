@@ -3,7 +3,7 @@ package com.dercio.algonated_tsp_service.verticles.runner.code;
 import com.dercio.algonated_tsp_service.response.Response;
 import com.dercio.algonated_tsp_service.verticles.ConsumerVerticle;
 import com.dercio.algonated_tsp_service.verticles.analytics.AnalyticsRequest;
-import com.dercio.algonated_tsp_service.verticles.analytics.CodeRunnerSummary;
+import com.dercio.algonated_tsp_service.verticles.analytics.AnalyticsSummary;
 import com.dercio.algonated_tsp_service.verticles.runner.code.verifier.IllegalMethodVerifier;
 import com.dercio.algonated_tsp_service.verticles.runner.code.verifier.ImportVerifier;
 import com.dercio.algonated_tsp_service.verticles.runner.code.verifier.VerifyResult;
@@ -75,25 +75,25 @@ public class CodeRunnerVerticle extends ConsumerVerticle {
                 .distances(options.getDistances())
                 .build();
 
-        vertx.eventBus().<CodeRunnerSummary>request(
-                TSP_ANALYTICS_SUMMARY.toString(),
-                analyticsRequest,
-                reply -> {
-                    if (reply.succeeded()) {
-                        var codeRunnerSummary = reply.result().body();
-                        message.reply(new Response()
-                                .setSuccess(true)
-                                .setConsoleOutput(executionResult.getErrorMessage())
-                                .setResult(executionResult.getSolution())
-                                .setData(options.getDistances())
-                                .setSummary(codeRunnerSummary)
-                                .setSolutions(executionResult.getSolutions()));
-                    } else {
-                        log.error("Error: {}", reply.cause().getMessage());
-                        message.fail(400, reply.cause().getMessage());
-                    }
-                }
-        );
+        var analyticsSummary = vertx.eventBus()
+                .<AnalyticsSummary>request(TSP_ANALYTICS_SUMMARY.toString(), analyticsRequest);
+
+        analyticsSummary.onSuccess(reply -> {
+            var summary = reply.body();
+            message.reply(new Response()
+                    .setSuccess(true)
+                    .setConsoleOutput(executionResult.getErrorMessage())
+                    .setResult(executionResult.getSolution())
+                    .setData(options.getDistances())
+                    .setSummary(summary)
+                    .setSolutions(executionResult.getSolutions()));
+        });
+
+        analyticsSummary.onFailure(error -> {
+            log.error("Error: {}", error.getMessage());
+            message.fail(400, error.getMessage());
+        });
+
     }
 
     public CompileResult compile(CodeOptions options) {

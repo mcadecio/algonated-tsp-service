@@ -2,7 +2,7 @@ package com.dercio.algonated_tsp_service.verticles.codec;
 
 import com.dercio.algonated_tsp_service.response.Response;
 import com.dercio.algonated_tsp_service.verticles.analytics.AnalyticsRequest;
-import com.dercio.algonated_tsp_service.verticles.analytics.CodeRunnerSummary;
+import com.dercio.algonated_tsp_service.verticles.analytics.AnalyticsSummary;
 import com.dercio.algonated_tsp_service.verticles.runner.code.CodeOptions;
 import com.dercio.algonated_tsp_service.verticles.runner.demo.DemoOptions;
 import io.vertx.core.AbstractVerticle;
@@ -19,8 +19,8 @@ public class CodecRegisterVerticle extends AbstractVerticle {
                         AnalyticsRequest.class,
                         new GenericCodec<>(AnalyticsRequest.class))
                 .registerDefaultCodec(
-                        CodeRunnerSummary.class,
-                        new GenericCodec<>(CodeRunnerSummary.class))
+                        AnalyticsSummary.class,
+                        new GenericCodec<>(AnalyticsSummary.class))
                 .registerDefaultCodec(
                         CodeOptions.class,
                         new GenericCodec<>(CodeOptions.class))
@@ -37,7 +37,7 @@ public class CodecRegisterVerticle extends AbstractVerticle {
     public void stop(Promise<Void> stopPromise) {
         vertx.eventBus()
                 .unregisterDefaultCodec(AnalyticsRequest.class)
-                .unregisterDefaultCodec(CodeRunnerSummary.class)
+                .unregisterDefaultCodec(AnalyticsSummary.class)
                 .unregisterDefaultCodec(CodeOptions.class)
                 .unregisterDefaultCodec(DemoOptions.class)
                 .unregisterDefaultCodec(Response.class);

@@ -100,34 +100,30 @@ public class Application extends AbstractVerticle {
 
     private void handleTSPRequest(RoutingContext rc) {
         vertx.eventBus().<Response>request(
-                VerticleAddresses.TSP_SUBMISSION.toString(),
-                rc.getBodyAsJson().mapTo(CodeOptions.class),
-                reply -> {
-                    if (reply.succeeded()) {
-                        rc.response()
-                                .putHeader(CONTENT_TYPE, APPLICATION_JSON)
-                                .write(reply.result().body().encode());
-                        rc.next();
-                    } else {
-                        rc.fail(reply.cause());
-                    }
-                });
+                        VerticleAddresses.TSP_SUBMISSION.toString(),
+                        rc.getBodyAsJson().mapTo(CodeOptions.class)
+                )
+                .onSuccess(reply -> {
+                    rc.response()
+                            .putHeader(CONTENT_TYPE, APPLICATION_JSON)
+                            .write(reply.body().encode());
+                    rc.next();
+                })
+                .onFailure(rc::fail);
     }
 
     private void handleDemoRequest(RoutingContext rc) {
         vertx.eventBus().<Response>request(
-                VerticleAddresses.TSP_DEMO.toString(),
-                rc.getBodyAsJson().mapTo(DemoOptions.class),
-                reply -> {
-                    if (reply.succeeded()) {
-                        rc.response()
-                                .putHeader(CONTENT_TYPE, APPLICATION_JSON)
-                                .write(reply.result().body().encode());
-                        rc.next();
-                    } else {
-                        rc.fail(reply.cause());
-                    }
-                });
+                        VerticleAddresses.TSP_DEMO.toString(),
+                        rc.getBodyAsJson().mapTo(DemoOptions.class)
+                )
+                .onSuccess(reply -> {
+                    rc.response()
+                            .putHeader(CONTENT_TYPE, APPLICATION_JSON)
+                            .write(reply.body().encode());
+                    rc.next();
+                })
+                .onFailure(error -> rc.fail(error.getCause()));
     }
 
     private void handleHealth(RoutingContext rc) {

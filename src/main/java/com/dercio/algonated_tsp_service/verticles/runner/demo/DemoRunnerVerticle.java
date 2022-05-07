@@ -4,7 +4,7 @@ import com.dercio.algonated_tsp_service.algorithms.Algorithm;
 import com.dercio.algonated_tsp_service.response.Response;
 import com.dercio.algonated_tsp_service.verticles.ConsumerVerticle;
 import com.dercio.algonated_tsp_service.verticles.analytics.AnalyticsRequest;
-import com.dercio.algonated_tsp_service.verticles.analytics.CodeRunnerSummary;
+import com.dercio.algonated_tsp_service.verticles.analytics.AnalyticsSummary;
 import com.google.common.base.Stopwatch;
 import io.vertx.core.Promise;
 import io.vertx.core.eventbus.Message;
@@ -55,25 +55,25 @@ public class DemoRunnerVerticle extends ConsumerVerticle {
                 .distances(request.getDistances())
                 .build();
 
-        vertx.eventBus().<CodeRunnerSummary>request(
-                TSP_ANALYTICS_SUMMARY.toString(),
-                analyticsRequest,
-                reply -> {
-                    if (reply.succeeded()) {
-                        var codeRunnerSummary = reply.result().body();
-                        message.reply(new Response()
-                                .setSuccess(true)
-                                .setConsoleOutput("Your Demo is ready!")
-                                .setResult(solution)
-                                .setData(request.getDistances())
-                                .setSummary(codeRunnerSummary)
-                                .setSolutions(algorithm.getSolutions()));
-                    } else {
-                        log.error("Error: {}", reply.cause().getMessage());
-                        message.fail(400, reply.cause().getMessage());
-                    }
-                }
-        );
+
+        var analyticsSummary = vertx.eventBus()
+                .<AnalyticsSummary>request(TSP_ANALYTICS_SUMMARY.toString(), analyticsRequest);
+
+        analyticsSummary.onSuccess(reply -> {
+            var summary = reply.body();
+            message.reply(new Response()
+                    .setSuccess(true)
+                    .setConsoleOutput("Your Demo is ready!")
+                    .setResult(solution)
+                    .setData(request.getDistances())
+                    .setSummary(summary)
+                    .setSolutions(algorithm.getSolutions()));
+        });
+
+        analyticsSummary.onFailure(error -> {
+            log.error("Error: {}", error.getCause().getMessage());
+            message.fail(400, error.getCause().getMessage());
+        });
     }
 
 }

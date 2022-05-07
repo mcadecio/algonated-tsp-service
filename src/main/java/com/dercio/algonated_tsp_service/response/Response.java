@@ -1,6 +1,6 @@
 package com.dercio.algonated_tsp_service.response;
 
-import com.dercio.algonated_tsp_service.verticles.analytics.CodeRunnerSummary;
+import com.dercio.algonated_tsp_service.verticles.analytics.AnalyticsSummary;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.vertx.core.json.Json;
 import lombok.ToString;
@@ -15,7 +15,7 @@ public class Response {
     private String consoleOutput;
     private List<Integer> result = Collections.emptyList();
     private double[][] data = {};
-    private CodeRunnerSummary summary = new CodeRunnerSummary();
+    private AnalyticsSummary summary = new AnalyticsSummary();
     private List<List<Integer>> solutions = Collections.emptyList();
 
     @JsonProperty("isSuccess")
@@ -55,11 +55,11 @@ public class Response {
         return this;
     }
 
-    public CodeRunnerSummary getSummary() {
+    public AnalyticsSummary getSummary() {
         return summary;
     }
 
-    public Response setSummary(CodeRunnerSummary summary) {
+    public Response setSummary(AnalyticsSummary summary) {
         this.summary = summary;
         return this;
     }

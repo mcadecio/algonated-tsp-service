@@ -2,7 +2,7 @@ package com.dercio.algonated_tsp_service.verticles.runner.code;
 
 import com.dercio.algonated_tsp_service.response.Response;
 import com.dercio.algonated_tsp_service.verticles.VerticleAddresses;
-import com.dercio.algonated_tsp_service.verticles.analytics.CodeRunnerSummary;
+import com.dercio.algonated_tsp_service.verticles.analytics.AnalyticsSummary;
 import com.dercio.algonated_tsp_service.verticles.analytics.TSPAnalyticsVerticle;
 import com.dercio.algonated_tsp_service.verticles.codec.CodecRegisterVerticle;
 import io.vertx.core.Vertx;
@@ -174,8 +174,8 @@ class CodeRunnerVerticleTest {
                 .build();
     }
 
-    private CodeRunnerSummary simpleCodeSummary() {
-        var summary = new CodeRunnerSummary();
+    private AnalyticsSummary simpleCodeSummary() {
+        var summary = new AnalyticsSummary();
         summary.setIterations(5);
         summary.setTimeRun(0.0);
         summary.setFitness(7.0);

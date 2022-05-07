@@ -48,8 +48,8 @@ public class TSPAnalyticsVerticle extends ConsumerVerticle {
         return TSP_ANALYTICS_SUMMARY.toString();
     }
 
-    private CodeRunnerSummary createSummary(AnalyticsRequest request) {
-        var summary = new CodeRunnerSummary();
+    private AnalyticsSummary createSummary(AnalyticsRequest request) {
+        var summary = new AnalyticsSummary();
         summary.setIterations(request.getIterations());
         summary.setTimeRun(request.getTimeElapsed());
         summary.setEfficacy(efficiencyCalculator.calculate(request.getDistances(), request.getSolution()));

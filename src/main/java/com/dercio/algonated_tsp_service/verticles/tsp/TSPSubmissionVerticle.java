@@ -19,16 +19,14 @@ public class TSPSubmissionVerticle extends ConsumerVerticle {
     public void start(Promise<Void> startPromise) {
         var eventBus = vertx.eventBus();
         submissionConsumer = eventBus.consumer(TSP_SUBMISSION.toString());
-        submissionConsumer.handler(message -> eventBus.<Response>request(
-                VerticleAddresses.CODE_RUNNER_CONSUMER.toString(),
-                message.body(),
-                reply -> {
-                    if (reply.succeeded()) {
-                        message.reply(reply.result().body());
-                    } else {
-                        message.fail(503, reply.cause().getMessage());
-                    }
-                }));
+        submissionConsumer.handler(message -> {
+            var request = eventBus.<Response>request(
+                    VerticleAddresses.CODE_RUNNER_CONSUMER.toString(),
+                    message.body());
+
+            request.onSuccess(reply -> message.reply(reply.body()));
+            request.onFailure(error -> message.fail(503, error.getMessage()));
+        });
 
         submissionConsumer.completionHandler(result -> logRegistration(startPromise, result));
     }

@@ -46,7 +46,7 @@ class TSPAnalyticsVerticleTest {
                 .solution(List.of(1, 0, 1))
                 .build();
 
-        vertx.eventBus().<CodeRunnerSummary>request(
+        vertx.eventBus().<AnalyticsSummary>request(
                 VerticleAddresses.TSP_ANALYTICS_SUMMARY.toString(),
                 request,
                 messageReply -> testContext.verify(() -> {
