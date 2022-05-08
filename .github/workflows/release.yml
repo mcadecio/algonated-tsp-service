@@ -34,3 +34,4 @@ jobs:
           heroku_email: ${{secrets.HEROKU_EMAIL}}
         env:
           HD_CORS_ALLOWED_DOMAIN: ${{secrets.CORS_ALLOWED_DOMAIN}}
+          HD_BASE_PACKAGE: com.dercio.algonated_tsp_service
