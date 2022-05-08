@@ -1,10 +1,14 @@
 package com.dercio.algonated_tsp_service.verticles.runner.code;
 
-import com.dercio.algonated_tsp_service.response.Response;
-import com.dercio.algonated_tsp_service.verticles.VerticleAddresses;
-import com.dercio.algonated_tsp_service.verticles.analytics.AnalyticsSummary;
-import com.dercio.algonated_tsp_service.verticles.analytics.TSPAnalyticsVerticle;
-import com.dercio.algonated_tsp_service.verticles.codec.CodecRegisterVerticle;
+import com.dercio.algonated_tsp_service.analytics.AnalyticsSummary;
+import com.dercio.algonated_tsp_service.analytics.TSPAnalyticsVerticle;
+import com.dercio.algonated_tsp_service.analytics.calculator.TSPEfficiencyCalculator;
+import com.dercio.algonated_tsp_service.analytics.calculator.TSPFitnessCalculator;
+import com.dercio.algonated_tsp_service.common.response.Response;
+import com.dercio.algonated_tsp_service.common.verticle.VerticleAddresses;
+import com.dercio.algonated_tsp_service.runner.code.CodeOptions;
+import com.dercio.algonated_tsp_service.runner.code.CodeRunnerVerticle;
+import com.dercio.algonated_tsp_service.verticles.CodecRegisterVerticle;
 import io.vertx.core.Vertx;
 import io.vertx.junit5.VertxExtension;
 import io.vertx.junit5.VertxTestContext;
@@ -27,7 +31,10 @@ class CodeRunnerVerticleTest {
     @BeforeAll
     public static void prepare(VertxTestContext testContext) {
         vertx.deployVerticle(new CodecRegisterVerticle());
-        vertx.deployVerticle(new TSPAnalyticsVerticle());
+        vertx.deployVerticle(new TSPAnalyticsVerticle(
+                new TSPEfficiencyCalculator(),
+                new TSPFitnessCalculator()
+        ));
         vertx.deployVerticle(
                 new CodeRunnerVerticle(),
                 testContext.succeeding(id -> testContext.completeNow())

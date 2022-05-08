@@ -1,11 +1,11 @@
 package com.dercio.algonated_tsp_service.verticles.scales;
 
-import com.dercio.algonated_tsp_service.response.Response;
-import com.dercio.algonated_tsp_service.verticles.VerticleAddresses;
-import com.dercio.algonated_tsp_service.verticles.codec.CodecRegisterVerticle;
-import com.dercio.algonated_tsp_service.verticles.runner.code.CodeOptions;
-import com.dercio.algonated_tsp_service.verticles.runner.code.CodeRunnerVerticle;
-import com.dercio.algonated_tsp_service.verticles.tsp.TSPSubmissionVerticle;
+import com.dercio.algonated_tsp_service.common.response.Response;
+import com.dercio.algonated_tsp_service.common.verticle.VerticleAddresses;
+import com.dercio.algonated_tsp_service.runner.code.CodeOptions;
+import com.dercio.algonated_tsp_service.runner.code.CodeRunnerVerticle;
+import com.dercio.algonated_tsp_service.submission.TSPSubmissionVerticle;
+import com.dercio.algonated_tsp_service.verticles.CodecRegisterVerticle;
 import io.vertx.core.Promise;
 import io.vertx.core.Vertx;
 import io.vertx.junit5.VertxExtension;

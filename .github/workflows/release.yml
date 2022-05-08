@@ -1,0 +1,47 @@
+name: Run Release
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  checkout:
+    name: Pull Project
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+  setup:
+    name: Setup Project
+    runs-on: ubuntu-latest
+    needs:
+      - checkout
+    steps:
+      - name: Set up JDK 11
+        uses: actions/setup-java@v2
+        with:
+          java-version: '11'
+          distribution: 'adopt'
+          cache: maven
+  test:
+    name: Run Tests
+    needs:
+      - setup
+    runs-on: ubuntu-latest
+    steps:
+      - name: Run Verify
+        run: mvn -B verify --file pom.xml
+  deploy:
+    name: Deploy To Heroku
+    runs-on: ubuntu-latest
+    needs:
+      - test
+    steps:
+      - name: Deploy to Heroku
+        uses: akhileshns/heroku-deploy@v3.12.12
+        with:
+          heroku_api_key: ${{secrets.HEROKU_API_KEY}}
+          heroku_app_name: algonated-tsp-service
+          heroku_email: ${{secrets.HEROKU_EMAIL}}
+        env:
+          HD_CORS_ALLOWED_DOMAIN: ${{secrets.CORS_ALLOWED_DOMAIN}}

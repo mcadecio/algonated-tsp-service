@@ -1,7 +1,10 @@
 package com.dercio.algonated_tsp_service.verticles.analytics;
 
-import com.dercio.algonated_tsp_service.verticles.VerticleAddresses;
-import com.dercio.algonated_tsp_service.verticles.codec.CodecRegisterVerticle;
+import com.dercio.algonated_tsp_service.analytics.AnalyticsRequest;
+import com.dercio.algonated_tsp_service.analytics.AnalyticsSummary;
+import com.dercio.algonated_tsp_service.analytics.TSPAnalyticsVerticle;
+import com.dercio.algonated_tsp_service.common.verticle.VerticleAddresses;
+import com.dercio.algonated_tsp_service.verticles.CodecRegisterVerticle;
 import io.vertx.core.Vertx;
 import io.vertx.junit5.VertxExtension;
 import io.vertx.junit5.VertxTestContext;
@@ -29,6 +32,11 @@ class TSPAnalyticsVerticleTest {
                         (data, solution) -> 2.0
                 ), testContext.succeeding(id -> testContext.completeNow())
         );
+    }
+
+    @AfterAll
+    public static void cleanup() {
+        vertx.close();
     }
 
     @Test
@@ -61,10 +69,5 @@ class TSPAnalyticsVerticleTest {
                 })
         );
 
-    }
-
-    @AfterAll
-    public static void cleanup() {
-        vertx.close();
     }
 }
